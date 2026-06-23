@@ -4,15 +4,6 @@ A portable music archive, memory machine, and personal museum centered around CD
 
 “Don’t just listen to music. Preserve who you were when you heard it.”
 
-# Mnemosyne
-
-A portable music archive, memory machine, and personal museum.
-
-## Philosophy
-
-Don't just listen to music.
-Preserve who you were when you heard it.
-
 ## Core Concepts
 
 - Archival integrity
