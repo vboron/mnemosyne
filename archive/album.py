@@ -1,9 +1,6 @@
 from pathlib import Path
 import sqlite3
-
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DB_PATH = PROJECT_ROOT / "database" / "mnemosyne.db"
-
+from archive.config import DB_PATH
 
 def register_album(disc_accession, title, artist=None, year=None):
     conn = sqlite3.connect(DB_PATH)

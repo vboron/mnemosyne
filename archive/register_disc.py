@@ -1,11 +1,7 @@
 from pathlib import Path
 import sqlite3
 from datetime import datetime
-
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DB_PATH = PROJECT_ROOT / "database" / "mnemosyne.db"
-VAULT_DISCS = PROJECT_ROOT / "vault" / "discs"
-
+from archive.config import DB_PATH, VAULT_DISCS
 
 def next_accession(conn):
     cur = conn.cursor()
