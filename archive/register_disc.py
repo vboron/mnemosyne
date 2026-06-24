@@ -1,7 +1,8 @@
-from pathlib import Path
 import sqlite3
 from datetime import datetime
-from archive.config import DB_PATH, VAULT_DISCS
+
+from archive.config import get_db_path, get_vault_discs
+
 
 def next_accession(conn):
     cur = conn.cursor()
@@ -27,13 +28,14 @@ def next_accession(conn):
 
 
 def register_disc(title, artist, year=None):
-    VAULT_DISCS.mkdir(parents=True, exist_ok=True)
+    vault_discs = get_vault_discs()
+    vault_discs.mkdir(parents=True, exist_ok=True)
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
 
     try:
         accession = next_accession(conn)
-        disc_folder = VAULT_DISCS / accession
+        disc_folder = vault_discs / accession
         disc_folder.mkdir(exist_ok=False)
 
         cur = conn.cursor()

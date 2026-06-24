@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime
-from archive.config import DB_PATH
+from archive.config import get_db_path
 
 
 def next_mix_code(conn):
@@ -23,7 +23,7 @@ def next_mix_code(conn):
 
 
 def create_mixtape(title, reason=None, liner_notes=None):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
 
     try:
         mix_code = next_mix_code(conn)
@@ -53,7 +53,7 @@ def create_mixtape(title, reason=None, liner_notes=None):
 
 
 def add_track_to_mixtape(mix_code, track_id):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
 
     cur.execute("SELECT id FROM mixtapes WHERE mix_code = ?", (mix_code,))

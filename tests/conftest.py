@@ -1,6 +1,6 @@
-import os
 import sqlite3
 from pathlib import Path
+
 import pytest
 
 
@@ -15,6 +15,7 @@ def temp_archive_env(tmp_path, monkeypatch):
     schema_path = Path(__file__).resolve().parents[1] / "database" / "schema.sql"
 
     conn = sqlite3.connect(test_db)
-    with open(schema_path) as f:
-        conn.executescript(f.read())
+    with open(schema_path, "r") as schema_file:
+        conn.executescript(schema_file.read())
+    conn.commit()
     conn.close()

@@ -8,6 +8,9 @@ from memory.session import create_session, end_session
 from memory.page import create_memory_page
 from memory.query import list_memories, show_memory, search_memories_by_tag
 from mixtape.mixtape import create_mixtape, add_track_to_mixtape
+from memory.revisit import revisit_today, revisit_random
+from memory.photo import register_photo
+from archive.provenance import show_track_provenance
 
 def print_rows(rows):
     if not rows:
@@ -77,6 +80,18 @@ def main():
     add_mix_track_parser = subparsers.add_parser("add-track-to-mixtape")
     add_mix_track_parser.add_argument("--mix-code", required=True)
     add_mix_track_parser.add_argument("--track-id", type=int, required=True)
+
+    subparsers.add_parser("revisit-today")
+    subparsers.add_parser("revisit-random")
+
+    photo_parser = subparsers.add_parser("register-photo")
+    photo_parser.add_argument("--memory-id", type=int, required=True)
+    photo_parser.add_argument("--type", required=True, choices=["portrait", "environment"])
+    photo_parser.add_argument("--file-path", required=True)
+
+    track_prov_parser = subparsers.add_parser("show-track")
+    track_prov_parser.add_argument("term")
+
 
     args = parser.parse_args()
 
@@ -184,6 +199,65 @@ def main():
         )
         print(f"Added track at position {order}")
 
+    elif args.command == "revisit-today":
+        rows = revisit_today()
+        if not rows:
+            print("No memories found for today.")
+        else:
+            for memory_id, created_at, journal, location, weather in rows:
+                print(f"Memory {memory_id} | {created_at}")
+                print(f"Location: {location or 'unknown'}")
+                print(f"Weather: {weather or 'unknown'}")
+                print(journal or "")
+                print()
+
+    elif args.command == "revisit-random":
+        row = revisit_random()
+        if row is None:
+            print("No memories found.")
+        else:
+            memory_id, created_at, journal, location, weather = row
+            print(f"Memory {memory_id} | {created_at}")
+            print(f"Location: {location or 'unknown'}")
+            print(f"Weather: {weather or 'unknown'}")
+            print(journal or "")
+
+    elif args.command == "register-photo":
+        photo_id = register_photo(
+            memory_id=args.memory_id,
+            photo_type=args.type,
+            file_path=args.file_path,
+        )
+        print(f"Registered photo: {photo_id}")
+
+    elif args.command == "show-track":
+        results = show_track_provenance(args.term)
+
+        if not results:
+            print("No tracks found.")
+        else:
+            for result in results:
+                track_id, track_title, track_number, album_title, album_artist, accession = result["track"]
+
+                print(f"Track {track_id}: {track_title}")
+                print(f"Origin: {accession}")
+                print(f"Album: {album_artist} — {album_title}")
+
+                print("Mixtapes:")
+                if result["mixtapes"]:
+                    for mix_code, mix_title in result["mixtapes"]:
+                        print(f"  {mix_code} — {mix_title}")
+                else:
+                    print("  none")
+
+                print("Listening sessions:")
+                if result["sessions"]:
+                    for session_id, started_at, mode in result["sessions"]:
+                        print(f"  {session_id} | {started_at} | {mode}")
+                else:
+                    print("  none")
+
+                print()
 
 if __name__ == "__main__":
     main()

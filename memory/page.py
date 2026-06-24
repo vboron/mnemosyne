@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime
 
-from archive.config import DB_PATH
+from archive.config import get_db_path
 
 
 def create_memory_page(
@@ -13,7 +13,7 @@ def create_memory_page(
 ):
     tags = tags or []
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
 
     cur.execute(

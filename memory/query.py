@@ -1,9 +1,9 @@
 import sqlite3
-from archive.config import DB_PATH
+from archive.config import get_db_path
 
 
 def list_memories():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
 
     cur.execute("""
@@ -21,7 +21,7 @@ def list_memories():
 
 
 def show_memory(memory_id):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
 
     cur.execute("""
@@ -54,7 +54,7 @@ def show_memory(memory_id):
 
 
 def search_memories_by_tag(tag):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
 
     cur.execute("""

@@ -1,9 +1,9 @@
 import sqlite3
-from archive.config import DB_PATH
+from archive.config import get_db_path
 
 
 def list_discs():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
 
     cur.execute(
@@ -20,7 +20,7 @@ def list_discs():
 
 
 def search_discs(term):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
 
     pattern = f"%{term}%"

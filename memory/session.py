@@ -1,11 +1,11 @@
 import sqlite3
 from datetime import datetime
 
-from archive.config import DB_PATH
+from archive.config import get_db_path
 
 
 def create_session(album_id=None, track_id=None, mode="listen"):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
 
     cur.execute(
@@ -25,7 +25,7 @@ def create_session(album_id=None, track_id=None, mode="listen"):
 
 
 def end_session(session_id):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
 
     cur.execute(

@@ -1,9 +1,9 @@
 from pathlib import Path
 import sqlite3
-from archive.config import DB_PATH
+from archive.config import get_db_path
 
 def register_album(disc_accession, title, artist=None, year=None):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
 
     cur.execute(
@@ -38,4 +38,3 @@ def register_album(disc_accession, title, artist=None, year=None):
     conn.close()
 
     return album_id
-

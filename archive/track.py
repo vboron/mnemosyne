@@ -1,6 +1,6 @@
 from pathlib import Path
 import sqlite3
-from archive.config import DB_PATH
+from archive.config import get_db_path
 
 def register_track(
     album_id,
@@ -9,7 +9,7 @@ def register_track(
     duration_seconds=None,
     flac_path=None,
 ):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
 
     cur.execute(
@@ -46,4 +46,3 @@ def register_track(
     conn.close()
 
     return track_id
-

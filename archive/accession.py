@@ -4,7 +4,7 @@ DB_PATH = "../database/mnemosyne.db"
 
 
 def next_accession():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
 
     cur.execute("SELECT COUNT(*) FROM physical_discs")
