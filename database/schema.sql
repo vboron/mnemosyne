@@ -54,5 +54,13 @@ CREATE TABLE IF NOT EXISTS mixtape_tracks (
     FOREIGN KEY(track_id) REFERENCES tracks(id)
 );
 
+CREATE TABLE IF NOT EXISTS counters (
+    name TEXT PRIMARY KEY,
+    value INTEGER NOT NULL
+);
+
+INSERT OR IGNORE INTO counters (name, value)
+VALUES ('cd_accession', 0);
+
 INSERT OR IGNORE INTO counters (name, value)
 VALUES ('mixtape', 0);
