@@ -10,8 +10,14 @@ def show_track_provenance(term):
     cur.execute(
         """
         SELECT tracks.id, tracks.title, tracks.track_number,
-               albums.title, albums.artist,
-               physical_discs.accession_code
+            albums.title, albums.artist,
+            physical_discs.accession_code,
+            tracks.artist,
+            tracks.musicbrainz_track_id,
+            tracks.musicbrainz_recording_id,
+            tracks.musicbrainz_release_id,
+            tracks.release_title,
+            tracks.release_date
         FROM tracks
         JOIN albums ON tracks.album_id = albums.id
         JOIN physical_discs ON albums.disc_id = physical_discs.id

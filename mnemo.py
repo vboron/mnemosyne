@@ -278,11 +278,33 @@ def main():
             print("No tracks found.")
         else:
             for result in results:
-                track_id, track_title, track_number, album_title, album_artist, accession = result["track"]
+                (
+                    track_id,
+                    track_title,
+                    track_number,
+                    album_title,
+                    album_artist,
+                    accession,
+                    track_artist,
+                    mb_track_id,
+                    mb_recording_id,
+                    mb_release_id,
+                    release_title,
+                    release_date,
+                ) = result["track"]
 
                 print(f"Track {track_id}: {track_title}")
-                print(f"Origin: {accession}")
+                print(f"Track artist: {track_artist or 'unknown'}")
+                print(f"Origin disc: {accession}")
                 print(f"Album: {album_artist} — {album_title}")
+                print()
+                print("MusicBrainz")
+                print(f"  Track ID: {mb_track_id or 'unknown'}")
+                print(f"  Recording ID: {mb_recording_id or 'unknown'}")
+                print(f"  Release ID: {mb_release_id or 'unknown'}")
+                print(f"  Release: {release_title or 'unknown'}")
+                print(f"  Release date: {release_date or 'unknown'}")
+                print()
 
                 print("Mixtapes:")
                 if result["mixtapes"]:
