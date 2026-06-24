@@ -108,6 +108,11 @@ def archive_current_disc_from_metadata(release_index=0):
             track_number=number,
             duration_seconds=toc_track["duration_seconds"],
             flac_path=str(flac_path),
+            musicbrainz_track_id=mb_track.get("musicbrainz_track_id"),
+            musicbrainz_recording_id=mb_track.get("musicbrainz_recording_id"),
+            musicbrainz_release_id=mb_track.get("musicbrainz_release_id"),
+            release_title=mb_track.get("release_title"),
+            release_date=mb_track.get("release_date"),
         )
 
         archived_tracks.append(

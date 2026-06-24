@@ -67,8 +67,13 @@ def lookup_disc_metadata():
                         "number": int(track.get("number", 0)),
                         "title": recording.get("title", track.get("title", "")),
                         "artist": track_artist,
+                        "musicbrainz_track_id": track.get("id"),
+                        "musicbrainz_recording_id": recording.get("id"),
+                        "musicbrainz_release_id": release.get("id"),
+                        "release_title": release.get("title"),
+                        "release_date": release.get("date"),
                     }
-                )
+)
 
         parsed.append(
             {

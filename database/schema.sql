@@ -85,6 +85,11 @@ CREATE TABLE IF NOT EXISTS tracks (
     track_number INTEGER,
     duration_seconds INTEGER,
     flac_path TEXT,
+    musicbrainz_track_id TEXT,
+    musicbrainz_recording_id TEXT,
+    musicbrainz_release_id TEXT,
+    release_title TEXT,
+    release_date TEXT,
     FOREIGN KEY(album_id) REFERENCES albums(id)
 );
 

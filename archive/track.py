@@ -10,6 +10,11 @@ def register_track(
     track_number=None,
     duration_seconds=None,
     flac_path=None,
+    musicbrainz_track_id=None,
+    musicbrainz_recording_id=None,
+    musicbrainz_release_id=None,
+    release_title=None,
+    release_date=None,
 ):
     conn = sqlite3.connect(get_db_path())
     cur = conn.cursor()
@@ -30,8 +35,20 @@ def register_track(
     cur.execute(
         """
         INSERT INTO tracks
-        (album_id, title, artist, track_number, duration_seconds, flac_path)
-        VALUES (?, ?, ?, ?, ?, ?)
+        (
+            album_id,
+            title,
+            artist,
+            track_number,
+            duration_seconds,
+            flac_path,
+            musicbrainz_track_id,
+            musicbrainz_recording_id,
+            musicbrainz_release_id,
+            release_title,
+            release_date
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             album_id,
@@ -40,6 +57,11 @@ def register_track(
             track_number,
             duration_seconds,
             flac_path,
+            musicbrainz_track_id,
+            musicbrainz_recording_id,
+            musicbrainz_release_id,
+            release_title,
+            release_date,
         ),
     )
 
