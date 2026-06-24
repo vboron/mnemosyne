@@ -15,6 +15,9 @@ from archive.ingest import ingest_disc_stub
 from memory.wizard import preserve_memory
 from memory.review import year_in_review
 from memory.export import export_memory
+from archive.ripper import rip_track_to_flac
+from archive.archive_disc import archive_current_disc
+from archive.album_query import list_albums, show_disc
 
 def print_rows(rows):
     if not rows:
@@ -110,6 +113,21 @@ def main():
 
     export_parser = subparsers.add_parser("export-memory")
     export_parser.add_argument("memory_id", type=int)
+
+    rip_parser = subparsers.add_parser("rip-track")
+    rip_parser.add_argument("track_number", type=int)
+    rip_parser.add_argument("--output", required=True)
+    rip_parser.add_argument("--keep-wav", action="store_true")
+
+    archive_disc_parser = subparsers.add_parser("archive-current-disc")
+    archive_disc_parser.add_argument("--title", required=True)
+    archive_disc_parser.add_argument("--artist", required=True)
+    archive_disc_parser.add_argument("--year", type=int)
+
+    subparsers.add_parser("list-albums")
+
+    show_disc_parser = subparsers.add_parser("show-disc")
+    show_disc_parser.add_argument("accession")
 
     args = parser.parse_args()
 
@@ -312,6 +330,56 @@ def main():
     elif args.command == "detect-disc":
         print_cd_toc()
 
+    elif args.command == "rip-track":
+        path = rip_track_to_flac(
+            track_number=args.track_number,
+            output_path=args.output,
+            keep_wav=args.keep_wav,
+        )
+
+        print(f"Ripped FLAC: {path}")
+
+    elif args.command == "archive-current-disc":
+        accession = archive_current_disc(
+            title=args.title,
+            artist=args.artist,
+            year=args.year,
+        )
+
+        print(f"Archived current disc: {accession}")
+
+    elif args.command == "list-albums":
+        rows = list_albums()
+
+        for album_id, title, artist, accession in rows:
+            print(
+                f"{album_id} | "
+                f"{artist} — {title} | "
+                f"{accession}"
+            )
+
+    elif args.command == "show-disc":
+        result = show_disc(args.accession)
+
+        if result is None:
+            print("Disc not found.")
+
+        else:
+            disc = result["disc"]
+            tracks = result["tracks"]
+
+            print()
+            print(f"{disc[1]}")
+            print(f"Artist: {disc[2]}")
+            print(f"Year: {disc[3]}")
+            print(f"Accession: {args.accession}")
+            print()
+
+            print("Tracks")
+            print("------")
+
+            for number, title in tracks:
+                print(f"{number:02d}. {title}")
 
 if __name__ == "__main__":
     main()

@@ -37,6 +37,9 @@ def register_disc(title, artist, year=None):
         accession = next_accession(conn)
         disc_folder = vault_discs / accession
         disc_folder.mkdir(exist_ok=False)
+        (disc_folder / "tracks").mkdir()
+        (disc_folder / "artwork").mkdir()
+        (disc_folder / "scans").mkdir()
 
         cur = conn.cursor()
         cur.execute(
