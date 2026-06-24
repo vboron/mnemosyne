@@ -4,7 +4,8 @@ from archive.query import list_discs, search_discs
 from archive.register_disc import register_disc
 from archive.album import register_album
 from archive.track import register_track
-
+from memory.session import create_session, end_session
+from memory.page import create_memory_page
 
 def print_rows(rows):
     if not rows:
@@ -43,6 +44,20 @@ def main():
     register_track_parser.add_argument("--duration", type=int)
     register_track_parser.add_argument("--flac-path")
 
+    session_parser = subparsers.add_parser("create-session")
+    session_parser.add_argument("--album-id", type=int)
+    session_parser.add_argument("--track-id", type=int)
+    session_parser.add_argument("--mode", default="listen")
+
+    end_session_parser = subparsers.add_parser("end-session")
+    end_session_parser.add_argument("session_id", type=int)
+
+    memory_parser = subparsers.add_parser("create-memory")
+    memory_parser.add_argument("--session-id", type=int, required=True)
+    memory_parser.add_argument("--journal")
+    memory_parser.add_argument("--tags")
+    memory_parser.add_argument("--location")
+    memory_parser.add_argument("--weather")
     args = parser.parse_args()
 
     if args.command == "list-discs":
@@ -77,7 +92,30 @@ def main():
             flac_path=args.flac_path,
         )
         print(f"Registered track ID: {track_id}")
+    elif args.command == "create-session":
+        session_id = create_session(
+            album_id=args.album_id,
+            track_id=args.track_id,
+            mode=args.mode,
+        )
+        print(f"Created listening session: {session_id}")
 
+    elif args.command == "end-session":
+        end_session(args.session_id)
+        print(f"Ended listening session: {args.session_id}")
+
+    elif args.command == "create-memory":
+        tags = args.tags.split(",") if args.tags else []
+
+        memory_id = create_memory_page(
+            session_id=args.session_id,
+            journal=args.journal,
+            tags=tags,
+            location_name=args.location,
+            weather=args.weather,
+        )
+
+        print(f"Created memory page: {memory_id}")
 
 if __name__ == "__main__":
     main()
