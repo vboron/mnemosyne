@@ -18,6 +18,7 @@ from memory.export import export_memory
 from archive.ripper import rip_track_to_flac
 from archive.archive_disc import archive_current_disc
 from archive.album_query import list_albums, show_disc
+from archive.metadata import lookup_disc_metadata
 
 def print_rows(rows):
     if not rows:
@@ -128,6 +129,7 @@ def main():
 
     show_disc_parser = subparsers.add_parser("show-disc")
     show_disc_parser.add_argument("accession")
+    subparsers.add_parser("lookup-disc")
 
     args = parser.parse_args()
 
@@ -378,8 +380,33 @@ def main():
             print("Tracks")
             print("------")
 
-            for number, title in tracks:
-                print(f"{number:02d}. {title}")
+            for number, title, artist in tracks:
+                artist_text = f"{artist} — " if artist else ""
+                print(f"{number:02d}. {artist_text}{title}")
 
+    elif args.command == "lookup-disc":
+        metadata = lookup_disc_metadata()
+
+        print(f"Disc ID: {metadata['disc_id']}")
+
+        if not metadata["found"]:
+            print("No MusicBrainz match found.")
+        else:
+            for index, release in enumerate(metadata["releases"], start=1):
+                print()
+                print(f"[{index}] {release['artist']} — {release['title']}")
+                print(f"Date: {release['date']}")
+
+                for track in release["tracks"]:
+                    artist_text = (
+                        f"{track['artist']} — "
+                        if track.get("artist")
+                        else ""
+                    )
+
+                    print(
+                        f"  {track['number']:02d}. "
+                        f"{artist_text}{track['title']}"
+                    )
 if __name__ == "__main__":
     main()

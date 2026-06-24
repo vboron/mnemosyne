@@ -41,7 +41,8 @@ def archive_current_disc(title, artist, year=None):
 
         register_track(
             album_id=album_id,
-            title=f"Track {number:02d}",
+            title=track.get("title", f"Track {number:02d}"),
+            artist=track.get("artist"),
             track_number=number,
             duration_seconds=track["duration_seconds"],
             flac_path=str(flac_path),

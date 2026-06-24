@@ -60,7 +60,7 @@ def show_disc(accession):
 
     cur.execute(
     """
-    SELECT tracks.track_number, tracks.title
+    SELECT tracks.track_number, tracks.title, tracks.artist
     FROM tracks
     JOIN albums
         ON tracks.album_id = albums.id

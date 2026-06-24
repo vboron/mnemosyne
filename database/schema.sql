@@ -87,6 +87,17 @@ CREATE TABLE IF NOT EXISTS mixtape_tracks (
     FOREIGN KEY(track_id) REFERENCES tracks(id)
 );
 
+CREATE TABLE IF NOT EXISTS tracks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    album_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    artist TEXT,
+    track_number INTEGER,
+    duration_seconds INTEGER,
+    flac_path TEXT,
+    FOREIGN KEY(album_id) REFERENCES albums(id)
+);
+
 CREATE TABLE IF NOT EXISTS counters (
     name TEXT PRIMARY KEY,
     value INTEGER NOT NULL

@@ -1,10 +1,12 @@
-from pathlib import Path
 import sqlite3
+
 from archive.config import get_db_path
+
 
 def register_track(
     album_id,
     title,
+    artist=None,
     track_number=None,
     duration_seconds=None,
     flac_path=None,
@@ -28,12 +30,13 @@ def register_track(
     cur.execute(
         """
         INSERT INTO tracks
-        (album_id, title, track_number, duration_seconds, flac_path)
-        VALUES (?, ?, ?, ?, ?)
+        (album_id, title, artist, track_number, duration_seconds, flac_path)
+        VALUES (?, ?, ?, ?, ?, ?)
         """,
         (
             album_id,
             title,
+            artist,
             track_number,
             duration_seconds,
             flac_path,
