@@ -16,16 +16,6 @@ CREATE TABLE IF NOT EXISTS albums (
     FOREIGN KEY(disc_id) REFERENCES physical_discs(id)
 );
 
-CREATE TABLE IF NOT EXISTS tracks (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    album_id INTEGER NOT NULL,
-    title TEXT NOT NULL,
-    track_number INTEGER,
-    duration_seconds INTEGER,
-    flac_path TEXT,
-    FOREIGN KEY(album_id) REFERENCES albums(id)
-);
-
 CREATE TABLE IF NOT EXISTS listening_sessions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     album_id INTEGER,
