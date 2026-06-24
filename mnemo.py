@@ -6,6 +6,8 @@ from archive.album import register_album
 from archive.track import register_track
 from memory.session import create_session, end_session
 from memory.page import create_memory_page
+from memory.query import list_memories, show_memory, search_memories_by_tag
+from mixtape.mixtape import create_mixtape, add_track_to_mixtape
 
 def print_rows(rows):
     if not rows:
@@ -58,6 +60,24 @@ def main():
     memory_parser.add_argument("--tags")
     memory_parser.add_argument("--location")
     memory_parser.add_argument("--weather")
+
+    subparsers.add_parser("list-memories")
+
+    show_memory_parser = subparsers.add_parser("show-memory")
+    show_memory_parser.add_argument("memory_id", type=int)
+
+    tag_search_parser = subparsers.add_parser("search-memories-tag")
+    tag_search_parser.add_argument("tag")
+
+    create_mix_parser = subparsers.add_parser("create-mixtape")
+    create_mix_parser.add_argument("--title", required=True)
+    create_mix_parser.add_argument("--reason")
+    create_mix_parser.add_argument("--liner-notes")
+
+    add_mix_track_parser = subparsers.add_parser("add-track-to-mixtape")
+    add_mix_track_parser.add_argument("--mix-code", required=True)
+    add_mix_track_parser.add_argument("--track-id", type=int, required=True)
+
     args = parser.parse_args()
 
     if args.command == "list-discs":
@@ -116,6 +136,54 @@ def main():
         )
 
         print(f"Created memory page: {memory_id}")
+    elif args.command == "list-memories":
+        for memory_id, created_at, journal, location, weather, album_id, track_id in list_memories():
+            print(f"{memory_id} | {created_at} | {location or 'unknown location'} | {journal or ''}")
+
+    elif args.command == "show-memory":
+        result = show_memory(args.memory_id)
+
+        if result is None:
+            print("No memory found.")
+        else:
+            memory = result["memory"]
+            tags = result["tags"]
+
+            memory_id, session_id, created_at, journal, location, weather = memory
+
+            print(f"Memory {memory_id}")
+            print(f"Created: {created_at}")
+            print(f"Session: {session_id}")
+            print(f"Location: {location or 'unknown'}")
+            print(f"Weather: {weather or 'unknown'}")
+            print(f"Tags: {', '.join(tags) if tags else 'none'}")
+            print()
+            print(journal or "")
+
+    elif args.command == "search-memories-tag":
+        rows = search_memories_by_tag(args.tag)
+
+        if not rows:
+            print("No memories found.")
+        else:
+            for memory_id, created_at, journal in rows:
+                print(f"{memory_id} | {created_at} | {journal or ''}")
+
+    elif args.command == "create-mixtape":
+        mix_code = create_mixtape(
+            title=args.title,
+            reason=args.reason,
+            liner_notes=args.liner_notes,
+        )
+        print(f"Created mixtape: {mix_code}")
+
+    elif args.command == "add-track-to-mixtape":
+        order = add_track_to_mixtape(
+            mix_code=args.mix_code,
+            track_id=args.track_id,
+        )
+        print(f"Added track at position {order}")
+
 
 if __name__ == "__main__":
     main()

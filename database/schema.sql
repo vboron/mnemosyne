@@ -34,3 +34,25 @@ CREATE TABLE IF NOT EXISTS memory_tags (
     FOREIGN KEY(memory_id) REFERENCES memory_pages(id),
     FOREIGN KEY(tag_id) REFERENCES tags(id)
 );
+
+CREATE TABLE IF NOT EXISTS mixtapes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    mix_code TEXT UNIQUE NOT NULL,
+    title TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    reason TEXT,
+    liner_notes TEXT
+);
+
+CREATE TABLE IF NOT EXISTS mixtape_tracks (
+    mixtape_id INTEGER NOT NULL,
+    track_id INTEGER NOT NULL,
+    track_order INTEGER NOT NULL,
+
+    PRIMARY KEY(mixtape_id, track_order),
+    FOREIGN KEY(mixtape_id) REFERENCES mixtapes(id),
+    FOREIGN KEY(track_id) REFERENCES tracks(id)
+);
+
+INSERT OR IGNORE INTO counters (name, value)
+VALUES ('mixtape', 0);
