@@ -19,6 +19,7 @@ from archive.ripper import rip_track_to_flac
 from archive.album_query import list_albums, show_disc
 from archive.metadata import lookup_disc_metadata
 from archive.archive_disc import archive_current_disc_from_metadata
+from archive.original_release import find_original_release
 
 def print_rows(rows):
     if not rows:
@@ -133,6 +134,9 @@ def main():
 
     archive_metadata_parser = subparsers.add_parser("archive-disc")
     archive_metadata_parser.add_argument("--release-index", type=int, default=0)
+
+    original_parser = subparsers.add_parser("original-release")
+    original_parser.add_argument("term")
 
     args = parser.parse_args()
 
@@ -437,6 +441,29 @@ def main():
             release_index=args.release_index
         )
         print(f"Archived disc: {accession}")
+
+    elif args.command == "original-release":
+        result = find_original_release(args.term)
+
+        if result is None:
+            print("No track with MusicBrainz recording ID found.")
+        else:
+            print(f"{result['artist']} — {result['title']}")
+            print(f"Recording ID: {result['recording_id']}")
+            print()
+            print("Current archive release:")
+            print(f"  {result['current_release']} ({result['current_date'] or 'unknown date'})")
+
+            earliest = result["earliest_release"]
+
+            print()
+            print("Earliest known MusicBrainz release:")
+
+            if earliest is None:
+                print("  unknown")
+            else:
+                print(f"  {earliest.get('title')} ({earliest.get('date')})")
+                print(f"  Release ID: {earliest.get('id')}")
 
 if __name__ == "__main__":
     main()
