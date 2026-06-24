@@ -1,7 +1,9 @@
 from memory.session import create_session, end_session
 from memory.page import create_memory_page
+from memory.photo import register_photo
 from services.location import get_current_location
 from services.weather import get_current_weather
+from hardware.camera import capture_photo
 
 
 def preserve_memory():
@@ -19,7 +21,6 @@ def preserve_memory():
 
     journal = input("Journal note: ").strip()
     tags_raw = input("Atmosphere tags, comma-separated: ").strip()
-
     tags = [tag.strip() for tag in tags_raw.split(",") if tag.strip()]
 
     location = get_current_location()
@@ -32,6 +33,17 @@ def preserve_memory():
         location_name=location,
         weather=weather,
     )
+
+    take_photo = input("Capture webcam photo? [Y/n]: ").strip().lower()
+
+    if take_photo != "n":
+        photo_path = capture_photo("vault/photos/portrait")
+        register_photo(
+            memory_id=memory_id,
+            photo_type="portrait",
+            file_path=str(photo_path),
+        )
+        print(f"Captured photo: {photo_path}")
 
     end_session(session_id)
 
