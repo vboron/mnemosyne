@@ -1,0 +1,10 @@
+Mnemosyne Memory 1
+
+Created: 2026-06-24T08:16:00.067439
+Session: 1
+Location: London
+Weather: Cloudy
+Tags: Libraries, Rain, Velvet
+
+Journal:
+First Mnemosyne memory test.

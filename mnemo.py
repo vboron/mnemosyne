@@ -11,6 +11,10 @@ from mixtape.mixtape import create_mixtape, add_track_to_mixtape
 from memory.revisit import revisit_today, revisit_random
 from memory.photo import register_photo
 from archive.provenance import show_track_provenance
+from archive.ingest import ingest_disc_stub
+from memory.wizard import preserve_memory
+from memory.review import year_in_review
+from memory.export import export_memory
 
 def print_rows(rows):
     if not rows:
@@ -92,6 +96,19 @@ def main():
     track_prov_parser = subparsers.add_parser("show-track")
     track_prov_parser.add_argument("term")
 
+    ingest_parser = subparsers.add_parser("ingest-disc-stub")
+    ingest_parser.add_argument("--title", required=True)
+    ingest_parser.add_argument("--artist", required=True)
+    ingest_parser.add_argument("--year", type=int)
+    ingest_parser.add_argument("--tracks", help="Comma-separated track titles")
+
+    subparsers.add_parser("preserve")
+
+    review_parser = subparsers.add_parser("year-in-review")
+    review_parser.add_argument("year", type=int)
+
+    export_parser = subparsers.add_parser("export-memory")
+    export_parser.add_argument("memory_id", type=int)
 
     args = parser.parse_args()
 
@@ -258,6 +275,38 @@ def main():
                     print("  none")
 
                 print()
+
+    elif args.command == "ingest-disc-stub":
+        tracks = args.tracks.split(",") if args.tracks else []
+
+        accession, album_id = ingest_disc_stub(
+            title=args.title,
+            artist=args.artist,
+            year=args.year,
+            tracks=[track.strip() for track in tracks],
+        )
+
+        print(f"Archived disc: {accession}")
+        print(f"Album ID: {album_id}")
+
+    elif args.command == "preserve":
+        memory_id = preserve_memory()
+        print(f"Preserved memory: {memory_id}")
+
+    elif args.command == "year-in-review":
+        review = year_in_review(args.year)
+
+        print(f"Mnemosyne Year in Review: {review['year']}")
+        print(f"Memories: {review['memory_count']}")
+        print(f"Listening sessions: {review['session_count']}")
+        print("Top tags:")
+
+        for tag, count in review["top_tags"]:
+            print(f"  {tag}: {count}")
+
+    elif args.command == "export-memory":
+        output_path = export_memory(args.memory_id)
+        print(f"Exported memory to: {output_path}")
 
 if __name__ == "__main__":
     main()
