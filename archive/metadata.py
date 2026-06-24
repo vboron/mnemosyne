@@ -1,4 +1,3 @@
-import subprocess
 import musicbrainzngs
 import discid
 
@@ -73,6 +72,7 @@ def lookup_disc_metadata():
 
         parsed.append(
             {
+                "id": release.get("id"),
                 "title": release.get("title"),
                 "artist": artist,
                 "date": release.get("date"),

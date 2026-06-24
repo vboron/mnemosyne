@@ -1,0 +1,12 @@
+<h1>Mnemosyne</h1>
+
+<h2>Discs</h2>
+
+<ul>
+    {% for accession, title, artist, year, archive_date in discs %}
+    <li>
+        <a href="/disc/{{ accession }}">{{ accession }}</a>
+        — {{ artist }} — {{ title }} ({{ year or "unknown year" }})
+    </li>
+    {% endfor %}
+</ul>

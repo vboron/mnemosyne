@@ -1,0 +1,17 @@
+<h1>{{ accession }}</h1>
+
+{% if result %}
+<h2>{{ result.disc[2] }} — {{ result.disc[1] }}</h2>
+<p>Year: {{ result.disc[3] or "unknown" }}</p>
+
+<h3>Tracks</h3>
+<ol>
+    {% for number, title, artist in result.tracks %}
+    <li>
+        {% if artist %}{{ artist }} — {% endif %}{{ title }}
+    </li>
+    {% endfor %}
+</ol>
+{% else %}
+<p>Disc not found.</p>
+{% endif %}

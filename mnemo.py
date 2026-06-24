@@ -16,9 +16,9 @@ from memory.wizard import preserve_memory
 from memory.review import year_in_review
 from memory.export import export_memory
 from archive.ripper import rip_track_to_flac
-from archive.archive_disc import archive_current_disc
 from archive.album_query import list_albums, show_disc
 from archive.metadata import lookup_disc_metadata
+from archive.archive_disc import archive_current_disc_from_metadata
 
 def print_rows(rows):
     if not rows:
@@ -130,6 +130,9 @@ def main():
     show_disc_parser = subparsers.add_parser("show-disc")
     show_disc_parser.add_argument("accession")
     subparsers.add_parser("lookup-disc")
+
+    archive_metadata_parser = subparsers.add_parser("archive-disc")
+    archive_metadata_parser.add_argument("--release-index", type=int, default=0)
 
     args = parser.parse_args()
 
@@ -341,14 +344,12 @@ def main():
 
         print(f"Ripped FLAC: {path}")
 
-    elif args.command == "archive-current-disc":
-        accession = archive_current_disc(
-            title=args.title,
-            artist=args.artist,
-            year=args.year,
+    elif args.command == "archive-disc":
+        accession = archive_current_disc_from_metadata(
+            release_index=args.release_index
         )
+        print(f"Archived disc: {accession}")
 
-        print(f"Archived current disc: {accession}")
 
     elif args.command == "list-albums":
         rows = list_albums()
@@ -408,5 +409,12 @@ def main():
                         f"  {track['number']:02d}. "
                         f"{artist_text}{track['title']}"
                     )
+
+    elif args.command == "archive-disc":
+        accession = archive_current_disc_from_metadata(
+            release_index=args.release_index
+        )
+        print(f"Archived disc: {accession}")
+
 if __name__ == "__main__":
     main()

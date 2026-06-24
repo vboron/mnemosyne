@@ -1,0 +1,123 @@
+{
+  "accession": "VB-CD-000025",
+  "musicbrainz_disc_id": "K0Tq3mieFVEQfnJiHFq8TMoeZ94-",
+  "title": "Teenage Rebels! - Lost in France",
+  "artist": "Various Artists",
+  "year": 1992,
+  "archived_at": "2026-06-24T19:56:35.266623",
+  "artwork_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/artwork/front.jpg",
+  "tracks": [
+    {
+      "number": 1,
+      "title": "Lost in France",
+      "artist": "Bonnie Tyler",
+      "duration_seconds": 236,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/01 - Bonnie Tyler - Lost in France.flac"
+    },
+    {
+      "number": 2,
+      "title": "Mirrors",
+      "artist": "Sally Oldfield",
+      "duration_seconds": 210,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/02 - Sally Oldfield - Mirrors.flac"
+    },
+    {
+      "number": 3,
+      "title": "Just When I Needed You Most",
+      "artist": "Randy VanWarmer",
+      "duration_seconds": 241,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/03 - Randy VanWarmer - Just When I Needed You Most.flac"
+    },
+    {
+      "number": 4,
+      "title": "Maybe Tomorrow, Maybe Tonight",
+      "artist": "Earth and Fire",
+      "duration_seconds": 193,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/04 - Earth and Fire - Maybe Tomorrow Maybe Tonight.flac"
+    },
+    {
+      "number": 5,
+      "title": "Angel of the Morning",
+      "artist": "P.P. Arnold",
+      "duration_seconds": 195,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/05 - P.P. Arnold - Angel of the Morning.flac"
+    },
+    {
+      "number": 6,
+      "title": "Son of My Father",
+      "artist": "Chicory Tip",
+      "duration_seconds": 193,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/06 - Chicory Tip - Son of My Father.flac"
+    },
+    {
+      "number": 7,
+      "title": "Make Me an Island",
+      "artist": "Joe Dolan",
+      "duration_seconds": 178,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/07 - Joe Dolan - Make Me an Island.flac"
+    },
+    {
+      "number": 8,
+      "title": "A Whiter Shade of Pale",
+      "artist": "Procol Harum",
+      "duration_seconds": 243,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/08 - Procol Harum - A Whiter Shade of Pale.flac"
+    },
+    {
+      "number": 9,
+      "title": "Here Comes My Baby",
+      "artist": "The Tremeloes",
+      "duration_seconds": 165,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/09 - The Tremeloes - Here Comes My Baby.flac"
+    },
+    {
+      "number": 10,
+      "title": "Pillow Talk",
+      "artist": "Sylvia Robinson",
+      "duration_seconds": 260,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/10 - Sylvia Robinson - Pillow Talk.flac"
+    },
+    {
+      "number": 11,
+      "title": "Ice in the Sun",
+      "artist": "Status Quo",
+      "duration_seconds": 130,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/11 - Status Quo - Ice in the Sun.flac"
+    },
+    {
+      "number": 12,
+      "title": "In the Bad Bad Old Days",
+      "artist": "The Foundations",
+      "duration_seconds": 201,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/12 - The Foundations - In the Bad Bad Old Days.flac"
+    },
+    {
+      "number": 13,
+      "title": "Downtown",
+      "artist": "Petula Clark",
+      "duration_seconds": 190,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/13 - Petula Clark - Downtown.flac"
+    },
+    {
+      "number": 14,
+      "title": "Don't Throw Your Love Away",
+      "artist": "The Searchers",
+      "duration_seconds": 137,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/14 - The Searchers - Dont Throw Your Love Away.flac"
+    },
+    {
+      "number": 15,
+      "title": "Always Something There to Remind Me",
+      "artist": "Sandie Shaw",
+      "duration_seconds": 160,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/15 - Sandie Shaw - Always Something There to Remind Me.flac"
+    },
+    {
+      "number": 16,
+      "title": "All Day and All of the Night",
+      "artist": "The Kinks",
+      "duration_seconds": 142,
+      "flac_path": "/home/cherrychapstick/mnemosyne/vault/discs/VB-CD-000025/tracks/16 - The Kinks - All Day and All of the Night.flac"
+    }
+  ]
+}
