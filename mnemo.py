@@ -15,6 +15,7 @@ from archive.ingest import ingest_disc_stub
 from memory.wizard import preserve_memory
 from memory.review import year_in_review
 from memory.export import export_memory
+from archive.cd_detect import get_cd_toc
 
 def print_rows(rows):
     if not rows:
@@ -103,6 +104,7 @@ def main():
     ingest_parser.add_argument("--tracks", help="Comma-separated track titles")
 
     subparsers.add_parser("preserve")
+    subparsers.add_parser("detect-disc")
 
     review_parser = subparsers.add_parser("year-in-review")
     review_parser.add_argument("year", type=int)
@@ -307,6 +309,8 @@ def main():
     elif args.command == "export-memory":
         output_path = export_memory(args.memory_id)
         print(f"Exported memory to: {output_path}")
+    elif args.command == "detect-disc":
+        print(get_cd_toc())
 
 if __name__ == "__main__":
     main()
