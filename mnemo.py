@@ -20,6 +20,8 @@ from archive.album_query import list_albums, show_disc
 from archive.metadata import lookup_disc_metadata
 from archive.archive_disc import archive_current_disc_from_metadata
 from archive.original_release import find_original_release
+from memory.rich_revisit import rich_memory
+from playback.player import play_track
 
 def print_rows(rows):
     if not rows:
@@ -137,6 +139,12 @@ def main():
 
     original_parser = subparsers.add_parser("original-release")
     original_parser.add_argument("term")
+
+    rich_parser = subparsers.add_parser("rich-memory")
+    rich_parser.add_argument("memory_id", type=int)
+
+    play_parser = subparsers.add_parser("play-track")
+    play_parser.add_argument("term")
 
     args = parser.parse_args()
 
@@ -464,6 +472,36 @@ def main():
             else:
                 print(f"  {earliest.get('title')} ({earliest.get('date')})")
                 print(f"  Release ID: {earliest.get('id')}")
+
+    elif args.command == "rich-memory":
+        result = rich_memory(args.memory_id)
+
+        if result is None:
+            print("No memory found.")
+        else:
+            memory_id, created_at, journal, location, weather, album_id, track_id = result["memory"]
+
+            print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            print(f"Memory #{memory_id}")
+            print(created_at)
+            print()
+            print(f"Location: {location or 'unknown'}")
+            print(f"Weather: {weather or 'unknown'}")
+            print(f"Tags: {', '.join(result['tags']) if result['tags'] else 'none'}")
+            print()
+
+            print("Photos:")
+            for photo_type, file_path, captured_at in result["photos"]:
+                print(f"  {photo_type}: {file_path}")
+
+            print()
+            print("Journal:")
+            print(journal or "")
+            print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+    elif args.command == "play-track":
+        session_id = play_track(args.term)
+        print(f"Listening session created: {session_id}")
 
 if __name__ == "__main__":
     main()

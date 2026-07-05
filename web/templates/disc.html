@@ -1,17 +1,27 @@
-<h1>{{ accession }}</h1>
+{% extends "base.html" %}
 
+{% block content %}
 {% if result %}
-<h2>{{ result.disc[2] }} — {{ result.disc[1] }}</h2>
-<p>Year: {{ result.disc[3] or "unknown" }}</p>
+<section class="panel">
+    <div class="code">{{ accession }}</div>
+    <h1>{{ result.disc[1] }}</h1>
+    <div class="meta">{{ result.disc[2] }} · {{ result.disc[3] or "unknown year" }}</div>
+</section>
 
-<h3>Tracks</h3>
-<ol>
-    {% for number, title, artist in result.tracks %}
-    <li>
-        {% if artist %}{{ artist }} — {% endif %}{{ title }}
-    </li>
-    {% endfor %}
-</ol>
+<section class="panel">
+    <h2>Tracks</h2>
+    <ol class="tracklist">
+        {% for number, title, artist in result.tracks %}
+        <li>
+            <span class="track-no">{{ "%02d"|format(number) }}</span>
+            <span>{% if artist %}{{ artist }} — {% endif %}{{ title }}</span>
+        </li>
+        {% endfor %}
+    </ol>
+</section>
 {% else %}
-<p>Disc not found.</p>
+<section class="panel">
+    <p>Disc not found.</p>
+</section>
 {% endif %}
+{% endblock %}

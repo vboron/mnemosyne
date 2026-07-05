@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Mnemosyne</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <main class="shell">
+        <header class="header">
+            <div>
+                <div class="logo">Mnemosyne</div>
+                <div class="subtitle">Portable archive / memory deck</div>
+            </div>
+            <nav class="nav">
+                <a href="/">Discs</a>
+                <a href="/memories">Memories</a>
+            </nav>
+        </header>
+
+        {% block content %}{% endblock %}
+
+        <div class="footer">
+            Preserve who you were when you heard it.
+        </div>
+    </main>
+</body>
+
+</html>

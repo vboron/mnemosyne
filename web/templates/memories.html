@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel">
+    <h1>Memories</h1>
+    <div class="grid">
+        {% for memory_id, created_at, journal, location, weather, album_id, track_id in memories %}
+        <div class="card">
+            <a href="/memory/{{ memory_id }}">
+                <div class="code">MEM-{{ "%06d"|format(memory_id) }}</div>
+                <h3>{{ location or "Unknown place" }}</h3>
+                <div class="meta">{{ created_at }}</div>
+                <p>{{ journal or "" }}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

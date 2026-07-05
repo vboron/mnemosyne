@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if result %}
+{% set memory = result.memory %}
+<section class="panel">
+    <div class="code">MEM-{{ "%06d"|format(memory[0]) }}</div>
+    <h1>{{ memory[3] or "Unknown place" }}</h1>
+    <div class="meta">{{ memory[1] }} · {{ memory[4] or "unknown weather" }}</div>
+    <p>
+        {% for tag in result.tags %}
+        <span class="badge">{{ tag }}</span>
+        {% endfor %}
+    </p>
+</section>
+
+<section class="panel">
+    <h2>Photos</h2>
+    {% for photo_type, file_path, captured_at in result.photos %}
+    <div class="card">
+        <div class="code">{{ photo_type }}</div>
+        <div class="meta">{{ captured_at }}</div>
+        <img class="photo" src="/{{ file_path }}">
+    </div>
+    {% endfor %}
+</section>
+
+<section class="panel">
+    <h2>Journal</h2>
+    <p>{{ memory[2] }}</p>
+</section>
+{% else %}
+<section class="panel">
+    <p>Memory not found.</p>
+</section>
+{% endif %}
+{% endblock %}

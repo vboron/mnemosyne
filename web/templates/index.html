@@ -1,12 +1,24 @@
-<h1>Mnemosyne</h1>
+{% extends "base.html" %}
 
-<h2>Discs</h2>
+{% block content %}
+<div class="modules">
+    <section class="module">
+        <div class="module-label">Library</div>
+        <p>Albums <span class="code">{{ discs|length }}</span></p>
+        <p>Memories <span class="code">—</span></p>
+        <p>Mixtapes <span class="code">—</span></p>
+        <p>Tags <span class="code">—</span></p>
+    </section>
 
-<ul>
     {% for accession, title, artist, year, archive_date in discs %}
-    <li>
-        <a href="/disc/{{ accession }}">{{ accession }}</a>
-        — {{ artist }} — {{ title }} ({{ year or "unknown year" }})
-    </li>
+    <section class="module">
+        <a href="/disc/{{ accession }}">
+            <div class="module-label">{{ accession }}</div>
+            <h2 class="big-title">{{ title }}</h2>
+            <div class="meta">{{ artist }}</div>
+            <div class="meta">{{ year or "unknown year" }}</div>
+        </a>
+    </section>
     {% endfor %}
-</ul>
+</div>
+{% endblock %}

@@ -3,7 +3,7 @@ from memory.page import create_memory_page
 from memory.photo import register_photo
 from services.location import get_current_location
 from services.weather import get_current_weather
-from hardware.camera import capture_photo
+from hardware.camera import capture_portrait, capture_environment
 
 
 def preserve_memory():
@@ -34,16 +34,19 @@ def preserve_memory():
         weather=weather,
     )
 
-    take_photo = input("Capture webcam photo? [Y/n]: ").strip().lower()
+    capture_portrait_answer = input("Capture portrait photo? [Y/n]: ").strip().lower()
 
-    if take_photo != "n":
-        photo_path = capture_photo("vault/photos/portrait")
-        register_photo(
-            memory_id=memory_id,
-            photo_type="portrait",
-            file_path=str(photo_path),
-        )
-        print(f"Captured photo: {photo_path}")
+    if capture_portrait_answer != "n":
+        photo_path = capture_portrait()
+        register_photo(memory_id, "portrait", str(photo_path))
+        print(f"Captured portrait: {photo_path}")
+
+    capture_environment_answer = input("Capture environment photo? [Y/n]: ").strip().lower()
+
+    if capture_environment_answer != "n":
+        photo_path = capture_environment()
+        register_photo(memory_id, "environment", str(photo_path))
+        print(f"Captured environment: {photo_path}")
 
     end_session(session_id)
 
