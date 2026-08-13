@@ -81,9 +81,14 @@ def get_album_tracks(album_id):
 
 
 def first_playable():
-    """A sensible default track so the Now Playing screen has something to show."""
+    """A sensible default track so the Now Playing screen has something to show.
+
+    Prefer a track that actually carries a track-level artist (real, tagged
+    rips) over bare test discs archived without metadata, so the screen isn't
+    stuck on an "Unknown Artist" placeholder.
+    """
     rows = _query(
-        "WHERE t.flac_path IS NOT NULL ORDER BY t.id LIMIT 1",
+        "WHERE t.flac_path IS NOT NULL ORDER BY (t.artist IS NULL), t.id LIMIT 1",
         (),
     )
     return rows[0] if rows else None
