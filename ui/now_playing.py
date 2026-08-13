@@ -6,10 +6,32 @@ Polls the shared engine ~4Hz and pushes transport commands straight into it
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
+from playback import audio
 from playback.engine import engine
 from playback.library import artwork_path
 from ui import theme
 from ui.widgets import ScrubBar, WaveformBar
+
+
+class _BtConnectWorker(QtCore.QThread):
+    """Connect a Bluetooth speaker off the UI thread, then wait for its sink."""
+
+    done = QtCore.Signal(dict)  # the new bluetooth sink, or {} on failure
+
+    def __init__(self, mac, parent=None):
+        super().__init__(parent)
+        self._mac = mac
+
+    def run(self):
+        import time
+        if audio.connect_bluetooth(self._mac):
+            for _ in range(12):  # the PipeWire sink can lag the connection
+                for sink in audio.list_sinks():
+                    if sink["kind"] == "bluetooth":
+                        self.done.emit(sink)
+                        return
+                time.sleep(0.5)
+        self.done.emit({})
 
 
 def _fmt(seconds):
@@ -25,6 +47,12 @@ class NowPlayingScreen(QtWidgets.QWidget):
         self._last_track_id = None
         self._cover_pixmap = None
         self._build()
+
+        self._bt_worker = None
+        if audio.available():
+            self._refresh_output_label()
+        else:
+            self.output.hide()
 
         self._timer = QtCore.QTimer(self)
         self._timer.setInterval(250)  # ~4 Hz, matching the old WebSocket cadence
@@ -51,8 +79,18 @@ class NowPlayingScreen(QtWidgets.QWidget):
         self.backend = QtWidgets.QLabel("—")
         self.backend.setObjectName("backend")
         self.backend.setFont(theme.mono(11, letter_spacing=2))
+
+        self.output = QtWidgets.QPushButton("Output")
+        self.output.setObjectName("output")
+        self.output.setFont(theme.mono(11, letter_spacing=1))
+        self.output.setCursor(QtCore.Qt.PointingHandCursor)
+        self.output.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.output.clicked.connect(self._open_output_menu)
+
         top.addWidget(eyebrow)
         top.addStretch(1)
+        top.addWidget(self.output)
+        top.addSpacing(12)
         top.addWidget(self.backend)
         outer.addLayout(top)
 
@@ -155,6 +193,70 @@ class NowPlayingScreen(QtWidgets.QWidget):
         btn.setCursor(QtCore.Qt.PointingHandCursor)
         btn.setFocusPolicy(QtCore.Qt.NoFocus)
         return btn
+
+    # -- audio output picker ----------------------------------------------- #
+
+    @staticmethod
+    def _short_output(sink):
+        kind = sink.get("kind")
+        if kind == "hdmi":
+            return "HDMI"
+        if kind == "analog":
+            return "Headphones"
+        return sink.get("description") or "Output"  # bluetooth shows its name
+
+    def _refresh_output_label(self, sink=None):
+        if sink is None:
+            sinks = audio.list_sinks()
+            sink = next((s for s in sinks if s["is_default"]),
+                        sinks[0] if sinks else None)
+        if sink is None:
+            self.output.setText("Output")
+            self.output.setEnabled(False)
+            return
+        self.output.setEnabled(True)
+        self.output.setText("♪ " + self._short_output(sink))
+
+    def _open_output_menu(self):
+        menu = QtWidgets.QMenu(self)
+        menu.setFont(theme.sans(13))
+        sinks = audio.list_sinks()
+        for sink in sinks:
+            mark = "● " if sink["is_default"] else "    "
+            act = menu.addAction(mark + sink["description"])
+            act.triggered.connect(
+                lambda _=False, s=sink: self._select_output(s))
+
+        offline_bt = [d for d in audio.bluetooth_audio_devices()
+                      if not d["connected"]]
+        if offline_bt:
+            menu.addSeparator()
+            for dev in offline_bt:
+                act = menu.addAction(f"Connect {dev['name']}…")
+                act.triggered.connect(
+                    lambda _=False, d=dev: self._connect_bt(d))
+
+        menu.exec(self.output.mapToGlobal(self.output.rect().bottomLeft()))
+
+    def _select_output(self, sink):
+        engine.set_output_device(sink["name"])
+        if sink.get("id") is not None:
+            audio.set_default_sink(sink["id"])
+        self._refresh_output_label(sink)
+
+    def _connect_bt(self, dev):
+        if self._bt_worker is not None and self._bt_worker.isRunning():
+            return
+        self.output.setText("Connecting…")
+        self._bt_worker = _BtConnectWorker(dev["mac"], self)
+        self._bt_worker.done.connect(self._on_bt_connected)
+        self._bt_worker.start()
+
+    def _on_bt_connected(self, sink):
+        if sink:
+            self._select_output(sink)
+        else:
+            self._refresh_output_label()
 
     # -- background --------------------------------------------------------- #
 

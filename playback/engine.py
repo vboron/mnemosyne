@@ -69,6 +69,9 @@ class SimulatedBackend:
         self._pos_base = max(0.0, min(self._duration, float(seconds)))
         self._t0 = time.monotonic() if self._playing else None
 
+    def set_output_device(self, name):
+        return True  # no audio to route
+
     @property
     def position_seconds(self):
         return self._now()
@@ -116,6 +119,16 @@ class VlcBackend:
 
     def seek(self, seconds):
         self._player.set_time(int(seconds * 1000))
+
+    def set_output_device(self, name):
+        # Route the *current* playback live. ``name`` is a PipeWire node.name
+        # (the pulse sink name), which VLC's audio output targets directly.
+        try:
+            dev = name.encode() if isinstance(name, str) else name
+            self._player.audio_output_device_set(None, dev)
+            return True
+        except Exception:
+            return False
 
     @property
     def position_seconds(self):
@@ -297,6 +310,13 @@ class PlayerEngine:
             self._ended = False
             self._backend.seek(self._backend.duration_seconds * fraction)
             return self.state_unlocked()
+
+    def set_output_device(self, name):
+        """Route the current playback to a PipeWire sink (by node.name)."""
+        with self._lock:
+            if not name:
+                return False
+            return bool(self._backend.set_output_device(name))
 
     def _advance(self):
         # Auto-advance when a track finishes on its own: always keep playing.

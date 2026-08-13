@@ -78,6 +78,27 @@ QWidget {{
     color: {AMBER_SOFT};
     border-color: #4a3226;
 }}
+QPushButton#output {{
+    color: {TEXT};
+    background: {PANEL2};
+    border: 1px solid {LINE_SOFT};
+    border-radius: 4px;
+    padding: 5px 12px;
+    text-align: center;
+}}
+QPushButton#output:hover {{ border-color: {LINE}; background: {PANEL}; }}
+QMenu {{
+    background: {PANEL};
+    border: 1px solid {LINE};
+    padding: 6px;
+    color: {TEXT};
+}}
+QMenu::item {{
+    padding: 10px 18px;
+    border-radius: 4px;
+}}
+QMenu::item:selected {{ background: {PANEL2}; color: {AMBER}; }}
+QMenu::separator {{ height: 1px; background: {LINE_SOFT}; margin: 6px 8px; }}
 #artist {{ color: {AMBER}; letter-spacing: 3px; }}
 #title  {{ color: {TEXT}; }}
 #album  {{ color: {MUTED}; }}
