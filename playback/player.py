@@ -1,45 +1,34 @@
-import sqlite3
-import subprocess
+"""CLI playback entry point.
 
-from archive.config import get_db_path
-from memory.session import create_session
+Delegates to the shared stateful :data:`playback.engine.engine` so the CLI and
+the web Now Playing screen drive the *same* player. For CLI ergonomics this
+blocks until the track finishes (mirroring the old ``cvlc --play-and-exit``).
+"""
+
+import time
+
+from playback.engine import engine
 
 
 def play_track(term):
-    conn = sqlite3.connect(get_db_path())
-    cur = conn.cursor()
+    engine.play_search(term)
+    session_id = engine.session_id
 
-    cur.execute(
-        """
-        SELECT id, title, artist, flac_path
-        FROM tracks
-        WHERE title LIKE ?
-          AND flac_path IS NOT NULL
-        ORDER BY id
-        LIMIT 1
-        """,
-        (f"%{term}%",),
-    )
-
-    row = cur.fetchone()
-    conn.close()
-
-    if row is None:
-        raise ValueError(f"No playable track found for: {term}")
-
-    track_id, title, artist, flac_path = row
-
-    session_id = create_session(
-        track_id=track_id,
-        mode="listen",
-    )
-
-    print(f"Playing: {artist or 'Unknown'} — {title}")
+    state = engine.state()
+    track = state.get("track")
+    if track:
+        print(f"Playing: {track.get('artist') or 'Unknown'} — {track.get('title')}")
+        if track.get("missing"):
+            print("(audio file not found on this machine — nothing will be heard)")
     print(f"Session: {session_id}")
 
-    subprocess.run(
-        ["cvlc", "--play-and-exit", flac_path],
-        check=False,
-    )
+    try:
+        while True:
+            state = engine.state()
+            if not state["has_track"] or state["ended"]:
+                break
+            time.sleep(0.5)
+    except KeyboardInterrupt:
+        engine.stop()
 
     return session_id
