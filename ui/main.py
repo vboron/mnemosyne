@@ -18,13 +18,19 @@ from ui.now_playing import NowPlayingScreen
 
 
 def _seed_default_track():
-    """Load a sensible default so the screen isn't empty on launch (paused)."""
+    """Load a sensible default so the screen isn't empty on launch (paused).
+
+    Queue the whole disc the default track belongs to (not just the one track)
+    so the ⏮/⏭ transport can actually move between tracks.
+    """
     if engine.state()["has_track"]:
         return
     track = library.first_playable()
-    if track:
-        engine.play_tracks([track])
-        engine.pause()
+    if not track:
+        return
+    tracks = library.get_album_tracks(track["album_id"]) or [track]
+    engine.play_tracks(tracks, start=0)
+    engine.pause()
 
 
 def main():

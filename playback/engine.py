@@ -265,18 +265,30 @@ class PlayerEngine:
             return self.state_unlocked()
 
     def next(self):
+        """Manual skip forward: keep whatever play/pause state we were in.
+
+        (Auto-advance at natural end of track is :meth:`_advance`, which always
+        keeps playing.)
+        """
         with self._lock:
-            return self._advance(manual=True)
+            if self._index < len(self._queue) - 1:
+                was_playing = self._backend.is_playing
+                self._index += 1
+                self._load_current(autoplay=was_playing)
+            # At the last track a manual "next" is a no-op — stay put.
+            return self.state_unlocked()
 
     def prev(self):
         with self._lock:
+            was_playing = self._backend.is_playing
             # Restart current track if we're past the intro, else go back one.
             if self._backend.position_seconds > 3 or self._index <= 0:
                 self._backend.seek(0)
-                self._backend.play()
+                if was_playing:
+                    self._backend.play()
             else:
                 self._index -= 1
-                self._load_current(autoplay=True)
+                self._load_current(autoplay=was_playing)
             return self.state_unlocked()
 
     def seek_fraction(self, fraction):
@@ -286,7 +298,8 @@ class PlayerEngine:
             self._backend.seek(self._backend.duration_seconds * fraction)
             return self.state_unlocked()
 
-    def _advance(self, manual=False):
+    def _advance(self):
+        # Auto-advance when a track finishes on its own: always keep playing.
         if self._index < len(self._queue) - 1:
             self._index += 1
             self._load_current(autoplay=True)
